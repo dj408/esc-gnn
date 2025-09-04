@@ -1,0 +1,64 @@
+training:
+  ablate_second_order_wavelets: false
+
+dataset:
+  compute_edge_distances: true
+
+model:
+  model_key: escgnn_modular
+  equivar_pred: true
+  use_dirac_nodes: true
+  use_scalar_wavelet_batch_norm: false
+  num_scattering_layers_scalar: 2
+  num_scattering_layers_vector: 2
+  wavelet_scales_type: custom
+  scalar_diffusion_scales: [0, 1, 2, 4, 6, 8, 16]
+  # vector_diffusion_scales: [ 0,  1,  2,  5,  8, 11, 17, 32] # T=32, quantiles=1/5
+  vector_diffusion_scales: [0, 1, 2, 4, 6, 9, 16]  # T=16, quantiles=1/4
+  # J_scalar: 4
+  # J_vector: 4
+  pooling_type:
+  - sum
+  - max
+  # moments:
+  # - 1
+  # - 2
+  scalar_nonlin: silu
+  vector_nonlin: silu-gate
+  mlp_hidden_dim:
+  - 128
+  - 64
+  - 32
+  - 16
+  mlp_nonlin: silu
+  mlp_dropout_p: 0.7
+  scalar_wavelet_mlp_hidden:
+  - 64
+  - 64
+  vector_wavelet_mlp_hidden: # vector track mixer (no bias or activations in layers)
+  - 128 # 64
+  - 128 # 64
+  scalar_wavelet_mlp_dropout: 0.0 # 0.0
+  vector_wavelet_mlp_dropout: 0.0 # 0.0
+  scalar_wavelet_mlp_nonlin: silu
+  W_out_scalar: 16
+  W_out_vector: 32 # 16, 8
+  node_scalar_head_hidden:
+  - 64
+  - 64
+  node_scalar_head_nonlin: silu
+  node_scalar_head_dropout: 0.1
+  vector_gate_use_sigmoid: true
+  vector_gate_hidden: # output vector gate MLP widths
+  - 128 # 64
+  - 128 # 64
+  vector_gate_nonlin: silu
+  equal_degree: true
+  column_normalize_P: false
+  k_neighbors: 5
+  # neighbor_use_padding: false
+  neighbor_pool_stats:  # for cosine similarities pooling
+  # - min
+  - max
+  - mean
+  # - var
